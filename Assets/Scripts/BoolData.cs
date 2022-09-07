@@ -5,5 +5,8 @@ public class BoolData : ScriptableObject
 {
   
     public bool value;
-    
+    public void SetValue(bool checque)
+    {
+        value = checque;
+    }
 }
