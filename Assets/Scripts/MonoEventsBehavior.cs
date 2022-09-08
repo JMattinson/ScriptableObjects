@@ -6,25 +6,35 @@ using UnityEngine.Events;
 
 public class MonoEventsBehavior : MonoBehaviour
 {
-    public UnityEvent startEvent, awakeEvent, disableEvent,PingEvent;
+    public UnityEvent startEvent, awakeEvent, disableEvent,PingEvent,CoinEvent,TimeEvent;
 
-    private int time;
+    public float holdTime;
     // Start is called before the first frame update
     private void Awake()
     {
         awakeEvent.Invoke();
         
-    }
-
-    private void Start()
-    {
         startEvent.Invoke();
         if (PingEvent == null) PingEvent = new UnityEvent ();
 
-        PingEvent.AddListener(Ping); 
+        PingEvent.AddListener(DisablePing);
+        CoinEvent.AddListener(CoinPing);
+        
     }
 
-    private void OnDisable()
+
+
+    void OnTriggerEnter(Collider other)
+    {
+       CoinEvent.Invoke();
+    }
+
+    private IEnumerator Start()
+    {
+        yield return new WaitForSeconds(holdTime);
+        TimeEvent.Invoke();
+    }
+    void OnDisable()
     {
         disableEvent.Invoke();
         PingEvent.Invoke();
@@ -33,11 +43,18 @@ public class MonoEventsBehavior : MonoBehaviour
     }
 
    
-    void Ping()
+
+
+    void DisablePing()
     {
         Debug.Log (gameObject.name+" Disabled! "); 
         
-    } 
+    }
+
+    void CoinPing()
+    {
+        Debug.Log ("Coin!"); 
+    }
 
    
 }
